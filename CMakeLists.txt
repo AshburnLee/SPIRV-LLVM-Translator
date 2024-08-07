@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.13.4)
 
+message("junhui 0")
 if(NOT DEFINED BASE_LLVM_VERSION)
   set (BASE_LLVM_VERSION 20.0.0)
 endif(NOT DEFINED BASE_LLVM_VERSION)
@@ -7,7 +8,7 @@ set(LLVM_SPIRV_VERSION ${BASE_LLVM_VERSION}.0)
 
 include(FetchContent)
 include(FindPkgConfig)
-
+message("junhui 1")
 option(LLVM_SPIRV_INCLUDE_TESTS
   "Generate build targets for the llvm-spirv lit tests."
   ${LLVM_INCLUDE_TESTS})
@@ -18,12 +19,12 @@ if (NOT DEFINED LLVM_SPIRV_BUILD_EXTERNAL)
     set(LLVM_SPIRV_BUILD_EXTERNAL YES)
   endif(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
 endif (NOT DEFINED LLVM_SPIRV_BUILD_EXTERNAL)
-
+message("junhui 2")
 if(LLVM_SPIRV_BUILD_EXTERNAL)
   # Make sure llvm-spirv gets built when building outside the llvm tree.
   set(LLVM_BUILD_TOOLS ON)
 endif(LLVM_SPIRV_BUILD_EXTERNAL)
-
+message("junhui 3")
 # Download spirv.hpp from the official SPIRV-Headers repository.
 # One can skip this step by manually setting
 # LLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR path.
@@ -60,6 +61,7 @@ else()
           ${LLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR}")
 endif()
 
+message("junhui external")
 if(LLVM_SPIRV_BUILD_EXTERNAL)
   project(LLVM_SPIRV
     VERSION
@@ -68,17 +70,18 @@ if(LLVM_SPIRV_BUILD_EXTERNAL)
       CXX
       C
   )
-
+  message("junhui 4")
   set(CMAKE_CXX_STANDARD 17)
   set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+  message("junhui 5")
   if(LLVM_SPIRV_INCLUDE_TESTS)
     set(LLVM_TEST_COMPONENTS
       llvm-as
       llvm-dis
     )
+  message("junhui 6")
   endif(LLVM_SPIRV_INCLUDE_TESTS)
-
+  message("junhui ${BASE_LLVM_VERSION}")
   find_package(LLVM ${BASE_LLVM_VERSION} REQUIRED
     COMPONENTS
       Analysis
@@ -92,10 +95,12 @@ if(LLVM_SPIRV_BUILD_EXTERNAL)
       TransformUtils
       ${LLVM_TEST_COMPONENTS}
   )
+  message("junhui 7")
   set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     ${LLVM_CMAKE_DIR}
   )
+  message("junhui 8")
   include(AddLLVM)
   include(HandleLLVMOptions)
 
@@ -109,7 +114,7 @@ if(LLVM_SPIRV_BUILD_EXTERNAL)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
   endif()
 endif()
-
+message("junhui 9")
 set(LLVM_SPIRV_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 # first try locating SPIRV-Tools via pkgconfig (the old way)
@@ -164,3 +169,4 @@ install(
   DESTINATION
     ${CMAKE_INSTALL_PREFIX}/lib${LLVM_LIBDIR_SUFFIX}/pkgconfig
 )
+message("junhui -1")
